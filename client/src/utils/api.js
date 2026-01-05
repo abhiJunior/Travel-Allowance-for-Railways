@@ -1,6 +1,6 @@
 
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://travel-allowance-for-railways-backend.onrender.com";
 
 const getHeaders = () => ({
     'Content-Type' : 'application/json',
