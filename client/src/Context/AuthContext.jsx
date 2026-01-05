@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const AuthContext = createContext(null);
-
+const BASE_URL = "https://travel-allowance-for-railways-backend.onrender.com"
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
       const currentToken = localStorage.getItem('token');
       if (!currentToken) return;
 
-      const response = await fetch('http://localhost:5000/api/user/me', {
+      const response = await fetch(`${BASE_URL}/api/user/me`, {
         headers: {
           'Authorization': `Bearer ${currentToken}`
         }
