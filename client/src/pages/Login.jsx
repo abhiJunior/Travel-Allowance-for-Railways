@@ -4,7 +4,7 @@ import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthLayout from "../components/AuthLayout";
 
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../Context/AuthContext';
 
 const Login = () => {
   const { login } = useAuth();
