@@ -2,9 +2,9 @@
 import { Form, Input, Button, message } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate, Link } from 'react-router-dom';
-import AuthLayout from "../components/AuthLayout";
+import AuthLayout from "../Context/AuthLayout";
 
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../Context/AuthContext';
 
 const Login = () => {
   const { login } = useAuth();
