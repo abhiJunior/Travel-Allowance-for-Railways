@@ -18,7 +18,7 @@ import {
   Camera
 } from 'lucide-react';
 import { message } from 'antd';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../Context/AuthContext';
 import { api } from '../utils/api';
 
 const Profile = () => {
