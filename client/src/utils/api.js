@@ -1,6 +1,6 @@
 
 
-const BASE_URL = "https://travel-allowance-for-railways-backend.onrender.com";
+const BASE_URL = "http://localhost:5000";
 
 const getHeaders = () => ({
     'Content-Type' : 'application/json',
@@ -19,25 +19,28 @@ export const api = {
         headers : {"Content-Type" : "application/json"},
         body : JSON.stringify(data)
     }),
-    getMe : ()=> fetch(`${BASE_URL}/user/me`, {headers : getHeaders()}),
+    getMe : ()=> fetch(`${BASE_URL}/api/user/me`, {headers : getHeaders()}),
 
-    updateProfile : (values) => fetch(`${BASE_URL}/user/update-profile`,{
+    updateProfile : (values) => fetch(`${BASE_URL}/api/user/update-profile`,{
         method : "PATCH",
         headers : getHeaders(),
         body: JSON.stringify(values)
     }),
 
-    getJournal : (monthYear)=> fetch(`${BASE_URL}/journal/${monthYear}`,{headers : getHeaders()}),
+    getJournal : (monthYear)=> fetch(`${BASE_URL}/api/journal/${monthYear}`,{
+        method : "GET",
+        headers : getHeaders()
+    }),
 
     addEntry : (entryData) =>
-        fetch(`${BASE_URL}/journal/add`,{
+        fetch(`${BASE_URL}/api/journal/add`,{
             method : "POST",
             headers : getHeaders(),
             body : JSON.stringify(entryData)
         }),
 
     downloadPdf : (monthYear) =>
-        fetch(`${BASE_URL}/journal/generate-pdf/${monthYear}`,{
+        fetch(`${BASE_URL}/api/journal/generate-pdf/${monthYear}`,{
             method : "GET",
             headers : getHeaders(),
         })
