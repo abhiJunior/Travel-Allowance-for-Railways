@@ -11,9 +11,11 @@ const Login = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
+  const url = "http://localhost:5000"
+
   const onFinish = async (values) => {
     try {
-      const response = await fetch('http://localhost:5000/api/user/login', {
+      const response = await fetch(`${url}/api/user/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),

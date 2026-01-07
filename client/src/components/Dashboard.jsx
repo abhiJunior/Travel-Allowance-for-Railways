@@ -8,6 +8,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
+  const url = "http://localhost:5000"
+
   useEffect(() => {
     // Check if profile is complete when the user lands on Home
     fetchUserProfile();
@@ -15,7 +17,7 @@ const Dashboard = () => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/user/me', {
+      const response = await fetch(`${url}/api/user/me`, {
         headers: { 
             'Authorization': `Bearer ${localStorage.getItem('token')}` 
         }
@@ -34,7 +36,7 @@ const Dashboard = () => {
   const handleProfileUpdate = async (values) => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/user/update-profile', {
+      const response = await fetch(`${url}/api/user/update-profile`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',

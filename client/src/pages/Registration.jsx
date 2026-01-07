@@ -7,10 +7,11 @@ import AuthLayout from '../components/AuthLayout';
 const Registration = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
+  const url = "http://localhost:5000"
 
   const onFinish = async (values) => {
     try {
-      const response = await fetch('http://localhost:5000/api/user/register', {
+      const response = await fetch(`${url}/api/user/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
