@@ -38,8 +38,16 @@ const AppLayout = ({ children }) => {
 };
 
 const AppRoutes = () => {
-  const { user, loading,refreshUser,isAuthenticated} = useAuth();
+  const { user, loading, refreshUser, isAuthenticated } = useAuth();
 
+  // ✅ 1. Move Hooks to the top
+  useEffect(() => {
+    if (isAuthenticated) {
+      refreshUser();
+    }
+  }, [isAuthenticated, refreshUser]);
+
+  // ✅ 2. Conditional returns must come AFTER all hooks
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -48,15 +56,9 @@ const AppRoutes = () => {
     );
   }
 
-  useEffect(()=>{
-    if (isAuthenticated){
-      refreshUser()
-    }
-  },[isAuthenticated,refreshUser])
-
   return (
     <Routes>
-      {/* Public Routes */}
+      {/* ... the rest of your routes stay the same */}
       <Route 
         path="/login" 
         element={user ? <Navigate to="/" replace /> : <Login />} 
@@ -66,7 +68,6 @@ const AppRoutes = () => {
         element={user ? <Navigate to="/" replace /> : <Registration />} 
       />
       
-      {/* Protected Routes */}
       <Route
         path="/"
         element={
@@ -75,7 +76,6 @@ const AppRoutes = () => {
               <Home />
             </AppLayout>
           </ProtectedRoute>
-          
         }
       />
       <Route
@@ -86,11 +86,9 @@ const AppRoutes = () => {
               <Profile />
             </AppLayout>
           </ProtectedRoute>
-          
         }
       />
       
-      {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

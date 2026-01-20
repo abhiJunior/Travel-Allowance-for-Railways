@@ -1,5 +1,6 @@
 
 
+
 const BASE_URL = "http://localhost:5000";
 
 const getHeaders = () => ({
@@ -43,7 +44,22 @@ export const api = {
         fetch(`${BASE_URL}/api/journal/generate-pdf/${monthYear}`,{
             method : "GET",
             headers : getHeaders(),
+        }),
+
+    deleteEntry : (entryId)=>
+        fetch(`${BASE_URL}/api/journal/${entryId}`,{
+            method : "DELETE",
+            headers : getHeaders()
+        }),
+
+    updateEntry : (entryId,values)=>
+        fetch(`${BASE_URL}/api/journal/update-entry/${entryId}`,{
+            method : "PATCH",
+            headers : getHeaders(),
+            body : JSON.stringify(values)
         })
+
+    
 
     
 }

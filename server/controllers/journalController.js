@@ -648,3 +648,96 @@ export const generateTAPdf = async (req, res) => {
     res.status(500).send("Error generating TA PDF");
   }
 };
+
+
+
+
+export const deleteEntry = async (req, res) => {
+  try {
+    const { entryId } = req.params; // This is the _id of the specific entry (e.g., 6956c66d...)
+    console.log(req.user)
+    
+    const userId = req.user.id || req.user._id; // Corrected: getting ID from the user object
+    console.log(`Deleting entry ${entryId} for user ${userId}`);
+
+    // Use $pull to remove the object from the entries array where _id matches
+    const updatedJournal = await Journal.findOneAndUpdate(
+      { userId: userId, "entries._id": entryId }, 
+      { 
+        $pull: { entries: { _id: entryId } } 
+      },
+      { new: true } // returns the updated document
+    );
+
+    if (!updatedJournal) {
+      return res.status(404).json({
+        status: false,
+        message: "Entry not found or you don't have permission to delete it"
+      });
+    }
+
+    return res.status(200).json({
+      status: true,
+      message: "Entry deleted successfully",
+      data: updatedJournal
+    });
+    
+  } catch (e) {
+    console.error("Delete Error:", e.message);
+    return res.status(500).json({
+      status: false,
+      message: e.message
+    });
+  }
+};
+
+// controllers/journalController.js
+
+export const updateEntry = async (req, res) => {
+  try {
+    const { id } = req.params; // Entry ID from URL
+    const userId = req.user.id || req.user._id || req.user.userId;
+    
+    // Destructure the updated fields from the request body
+    const { 
+      date, trainNo, depTime, arrTime, 
+      fromStation, toStation, objectOfJourney, isStay 
+    } = req.body;
+
+    // We use "entries._id" in the filter to find the right sub-document
+    // The "$" in the update object refers to the index of the entry found
+    const updatedJournal = await Journal.findOneAndUpdate(
+      { userId: userId, "entries._id": id },
+      {
+        $set: {
+          "entries.$.date": date,
+          "entries.$.trainNo": isStay ? "" : trainNo,
+          "entries.$.depTime": isStay ? null : depTime,
+          "entries.$.arrTime": isStay ? null : arrTime,
+          "entries.$.fromStation": fromStation,
+          "entries.$.toStation": isStay ? "" : toStation,
+          "entries.$.objectOfJourney": objectOfJourney,
+          "entries.$.isStay": isStay,
+        }
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedJournal) {
+      return res.status(404).json({
+        status: false,
+        message: "Entry not found or you are not authorized"
+      });
+    }
+
+    return res.status(200).json({
+      status: true,
+      message: "Entry updated successfully",
+      data: updatedJournal
+    });
+
+  } catch (e) {
+    console.error("Update Error:", e.message);
+    return res.status(500).json({ status: false, message: e.message });
+  }
+};

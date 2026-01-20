@@ -12,9 +12,11 @@ import {
   FileText,
   ChevronRight,
   Loader2,
-  AlertCircle
+  AlertCircle,
+  Trash2,
+  Pencil 
 } from 'lucide-react';
-import { DatePicker, Table, message, Empty } from 'antd';
+import { DatePicker, Table, message, Empty,Popconfirm,Button } from 'antd';
 import dayjs from 'dayjs';
 import { api } from '../utils/api';
 import { useAuth } from '../Context/AuthContext';
@@ -53,6 +55,7 @@ const Home = () => {
   const [isProfileIncomplete, setIsProfileIncomplete] = useState(false);
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [editingEntry,setEditingEntry] = useState(null)
 
   const fetchJournalData = async () => {
     setLoading(true);
@@ -72,6 +75,20 @@ const Home = () => {
     }
   };
 
+  const handleDelete = async (entryId)=>{
+    try{
+      const res = await api.deleteEntry(entryId)
+      if (res.ok){
+        message.success("Entry deleted successfully")
+        fetchJournalData()
+      }else{
+        const data = await res.json();
+        message.error(data.message || "Failed to delete")
+      }
+    }catch(e){
+      message.error("Connection error")
+    }
+  }
   const handleDownload = async (monthYear) => {
     setPdfLoading(true);
     try {
@@ -199,6 +216,42 @@ const Home = () => {
       ),
       width: 100,
       align: 'right',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      width: 120, // Increased width to fit two buttons
+      fixed: 'right',
+      render: (_, record) => (
+        <div className="flex items-center space-x-2">
+          {/* Edit Button */}
+          <Button 
+            type="text" 
+            className="text-blue-600 hover:text-blue-700 flex items-center justify-center"
+            icon={<Pencil className="h-4 w-4" />} 
+            onClick={() => {
+              setEditingEntry(record); // Set the data
+              setIsEntryModalOpen(true); // Open the modal
+            }}
+          />
+
+          {/* Delete Button */}
+          <Popconfirm
+            title="Delete Entry"
+            onConfirm={() => handleDelete(record._id)}
+            okText="Yes"
+            cancelText="No"
+            okButtonProps={{ danger: true }}
+          >
+            <Button 
+              type="text" 
+              danger 
+              icon={<Trash2 className="h-4 w-4" />} 
+              className="flex items-center justify-center"
+            />
+          </Popconfirm>
+        </div>
+      ),
     },
   ];
 
@@ -371,9 +424,13 @@ const Home = () => {
       />
       <AddEntryModal
         isOpen={isEntryModalOpen}
-        onClose={() => setIsEntryModalOpen(false)}
+        onClose={() =>{
+          setIsEntryModalOpen(false)
+          setEditingEntry(null)
+        }}
         onRefresh={fetchJournalData}
         monthYear={month}
+        initialData={editingEntry}
       />
     </div>
   );
