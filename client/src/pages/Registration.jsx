@@ -7,7 +7,7 @@ import AuthLayout from '../components/AuthLayout';
 const Registration = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const url = "http://localhost:5000"
+  const url = "https://travel-allowance-for-railways.onrender.com"
 
   const onFinish = async (values) => {
     try {

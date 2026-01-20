@@ -8,7 +8,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
-  const url = "http://localhost:5000"
+  const url = "https://travel-allowance-for-railways.onrender.com"
 
   useEffect(() => {
     // Check if profile is complete when the user lands on Home
